@@ -12,12 +12,16 @@ def postgres(items):
     except:
         print("Connection failed")
         return False
+    
     cursor = conn.cursor()
-    sql_delete_quety = """
-        DELETE FROM parcer_model
-    """
-    cursor.execute(sql_delete_quety)
-    sql_insert_query = """
+
+    try:
+
+        sql_delete_quety = """
+            DELETE FROM parcer_model
+        """
+        cursor.execute(sql_delete_quety)
+        sql_insert_query = """
                         INSERT INTO parcer_model (id,
                         model_name, 
                         price, 
@@ -26,15 +30,21 @@ def postgres(items):
                         shop_name, 
                         date, 
                         dumping_status) VALUES(%s, %s, %s, %s, %s, %s, %s, %s)
-    """
-    result = cursor.executemany(sql_insert_query, items)
-    conn.commit()
+        """
+        result = cursor.executemany(sql_insert_query, items)
+        conn.commit()
 
-    print(cursor.rowcount, "Record inserted successfully into mobile table")
-    cursor.close()
-    conn.close()
-    print("PostgreSQL connection is closed")
+        print(cursor.rowcount, "Record inserted successfully into mobile table")
 
+    except (Exception, psycopg2.Error) as error:
+
+        print("Failed inserting record into mobile table {}".format(error))
+    finally:
+        # closing database connection.
+        if conn:
+            cursor.close()
+            conn.close()
+            print("PostgreSQL connection is closed")
 
 def parcer(url):
 
@@ -61,7 +71,7 @@ def parcer(url):
         product_price = product.find("span", class_="s-item__price")
         product_available = "In available"
         product_a = product.next_element
-        item = i, product_name.text, product_price.text.replace("£", ''), product_available, product_a.text, shop_name, today, dumping_status
+        item = i, product_name.text, product_price.text, product_available, product_a.text, shop_name, today, dumping_status
         items.append(item)
         print(item)
         
@@ -69,6 +79,6 @@ def parcer(url):
 
 if __name__ == "__main__":
 
-    items = parcer("https://www.ebay.co.uk/b/Fiction-Non-Fiction-Books/261186/bn_450928")
+    items = parcer("https://www.ebay.co.uk/b/Apple-Mobile-Smartphones/9355/bn_449685?LH_ItemCondition=1000%7C1500&rt=nc&_udlo=280&mag=1")
     postgres(items)
     
