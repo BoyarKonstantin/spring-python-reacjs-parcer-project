@@ -28,4 +28,5 @@ public class ParcerModel {
     private String dumpingStatus;
 
 
+
 }
