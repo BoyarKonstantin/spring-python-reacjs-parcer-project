@@ -3,6 +3,7 @@ package com.example.parcerprojectkostiantyn.Service;
 import com.example.parcerprojectkostiantyn.Models.ParcerModel;
 import com.example.parcerprojectkostiantyn.Repository.ParcerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,7 @@ public class ParcerService {
         parcerModel.setModelCode(UUID.randomUUID().toString());
         return parcerRepository.save(parcerModel);
     }
+    @Cacheable(cacheNames = {"allModel"})
     public List<ParcerModel> findAll(){
         return parcerRepository.findAll();
     }
