@@ -31,3 +31,11 @@ build/
 
 ### VS Code ###
 .vscode/
+
+python-scripts/__pycache__
+python-scripts/lib64
+python-scripts/bin
+python-scripts/lib/python3.11/site-packages
+python-scripts/include
+python-scripts/pyvenv.cfg
+front-end-side/parcer-react-app/node_modules
